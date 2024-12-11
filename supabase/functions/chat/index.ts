@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,9 +9,85 @@ const corsHeaders = {
 
 // Retry configuration
 const MAX_RETRIES = 3;
-const INITIAL_BACKOFF = 1000; // 1 second
+const INITIAL_BACKOFF = 1000;
 
-async function callOpenAIWithRetry(message: string, retryCount = 0): Promise<Response> {
+async function getDocumentContent(supabase: any, filename: string): Promise<string> {
+  try {
+    const { data, error } = await supabase
+      .storage
+      .from('policy-documents')
+      .download(`airbnb docs/${filename}`);
+    
+    if (error) {
+      console.error(`Error fetching ${filename}:`, error);
+      return '';
+    }
+
+    const text = await data.text();
+    return text;
+  } catch (error) {
+    console.error(`Error processing ${filename}:`, error);
+    return '';
+  }
+}
+
+async function buildSystemPrompt(supabase: any): Promise<string> {
+  const documents = [
+    'airbnb_reviews_policy.txt',
+    'airbnb_content_policy.txt',
+    'airbnb_community_standards.txt',
+    'airbnb_terms_of_service.txt'
+  ];
+
+  const documentContents = await Promise.all(
+    documents.map(doc => getDocumentContent(supabase, doc))
+  );
+
+  return `You are an expert on Airbnbs terms of service and professional communication best practices. Your only job is to work on behalf of the Airbnb host to help them respond to guest reviews.
+
+Reference Documents:
+Reviews Policy: ${documentContents[0]}
+Content Policy: ${documentContents[1]}
+Community Standards: ${documentContents[2]}
+Terms of Service: ${documentContents[3]}
+
+Context:
+You are an expert on Airbnbs terms of service and professional communication best practices. Your only job is to work on behalf of the Airbnb host to help them respond to guest reviews. The host will provide you with:
+The Guests first Name (to personalize your review response)
+A copy of the guests review. 
+Any additional context that is necessary. 
+
+Process:
+1. First, determine if the sentiment is positive or negative.
+
+For positive reviews:
+- Personalize using reviewer's name
+- Reference specific details from the review
+- Express gratitude
+- Be brief but meaningful
+- Encourage future engagement
+
+For negative reviews:
+1. Analyze for policy violations by cross-referencing:
+   - Airbnb Reviews Policy
+   - Content Policy
+   - Community Standards
+   - Terms of Service
+2. If violations found:
+   - Cite specific violated sections
+   - Provide action plan for removal
+   - Provide support agent script
+3. If no violations:
+   - Clearly state no violations found
+   - Provide 2 professional response versions
+   - Focus on improvements without being defensive
+   - Address concerns professionally
+   - Reassure future guests
+
+Remember to maintain professionalism and empathy in all responses.`;
+}
+
+async function callOpenAIWithRetry(message: string, systemPrompt: string, retryCount = 0): Promise<Response> {
   const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
   if (!openAIApiKey) {
     throw new Error('OpenAI API key not found');
@@ -24,25 +101,13 @@ async function callOpenAIWithRetry(message: string, retryCount = 0): Promise<Res
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         messages: [
-          {
-            role: 'system',
-            content: `You are GuestReview Genius, an AI assistant specialized in helping Airbnb hosts craft professional and effective responses to guest reviews. Your goal is to help hosts maintain high ratings and build trust with potential guests.
-
-Guidelines for responses:
-1. Always maintain a professional and courteous tone
-2. Address specific points mentioned in the review
-3. Show appreciation for positive feedback
-4. Handle criticism constructively and professionally
-5. Keep responses concise but thorough
-6. Focus on solutions and improvements
-7. End with a positive note that encourages future bookings`
-          },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
         temperature: 0.7,
-        max_tokens: 500,
+        max_tokens: 1000,
       }),
     });
 
@@ -50,7 +115,7 @@ Guidelines for responses:
       const backoffTime = INITIAL_BACKOFF * Math.pow(2, retryCount);
       console.log(`Rate limited. Retrying in ${backoffTime}ms... (Attempt ${retryCount + 1}/${MAX_RETRIES})`);
       await new Promise(resolve => setTimeout(resolve, backoffTime));
-      return callOpenAIWithRetry(message, retryCount + 1);
+      return callOpenAIWithRetry(message, systemPrompt, retryCount + 1);
     }
 
     if (!response.ok) {
@@ -72,16 +137,25 @@ Guidelines for responses:
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Initialize Supabase client
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
     const { message } = await req.json();
     console.log('Received message:', message);
 
-    const response = await callOpenAIWithRetry(message);
+    // Build system prompt with document references
+    const systemPrompt = await buildSystemPrompt(supabaseClient);
+    console.log('System prompt built successfully');
+
+    const response = await callOpenAIWithRetry(message, systemPrompt);
     const data = await response.json();
     console.log('OpenAI API response received successfully');
 
