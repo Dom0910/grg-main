@@ -1,6 +1,9 @@
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="pt-32 pb-16 container-padding bg-primary text-white">
       <div className="max-w-4xl mx-auto text-center">
@@ -11,8 +14,11 @@ const Hero = () => {
           Streamline your payment processes and focus on what matters most - growing your business. Simple, secure, and seamless.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors flex items-center justify-center gap-2">
-            Get Started
+          <button 
+            onClick={() => navigate("/survey")}
+            className="bg-accent text-white px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors flex items-center justify-center gap-2"
+          >
+            Try it today
             <ArrowRight className="w-4 h-4" />
           </button>
           <button className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/20 transition-colors">

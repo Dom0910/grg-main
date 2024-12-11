@@ -9,6 +9,7 @@ import { supabase } from "./integrations/supabase/client";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import Survey from "./pages/Survey";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/survey" element={<Survey />} />
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <Admin />
