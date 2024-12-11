@@ -35,7 +35,7 @@ Guidelines for responses:
 
     // Generate response using OpenAI
     const completion = await openai.createChatCompletion({
-      model: "gpt-4",
+      model: "gpt-4o",  // Updated to use the recommended model
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: message }
