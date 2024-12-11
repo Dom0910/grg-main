@@ -14,10 +14,13 @@ import {
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 
 const Admin = () => {
   const navigate = useNavigate();
   const { session } = useAuth();
+  const { toast } = useToast();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", session?.user?.id],
@@ -68,6 +71,30 @@ const Admin = () => {
     enabled: !!profile?.is_admin,
   });
 
+  const { data: feedbackSummary, isLoading: isLoadingSummary } = useQuery({
+    queryKey: ["feedback_summary", surveyResponses],
+    queryFn: async () => {
+      if (!surveyResponses) return null;
+
+      const { data, error } = await supabase.functions.invoke("summarize-feedback", {
+        body: { feedbackData: surveyResponses },
+      });
+
+      if (error) {
+        console.error("Error fetching summary:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to generate feedback summary. Please try again later.",
+        });
+        return null;
+      }
+
+      return data.summary;
+    },
+    enabled: !!surveyResponses && surveyResponses.length > 0,
+  });
+
   useEffect(() => {
     if (profile && !profile.is_admin) {
       navigate("/");
@@ -83,6 +110,18 @@ const Admin = () => {
       <Header />
       <main className="container max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+
+        {/* Summary Card */}
+        <Card className="p-6 mb-8 bg-white shadow">
+          <h2 className="text-xl font-semibold mb-4">Feedback Summary</h2>
+          {isLoadingSummary ? (
+            <div className="animate-pulse h-20 bg-gray-100 rounded"></div>
+          ) : feedbackSummary ? (
+            <p className="text-gray-700 whitespace-pre-wrap">{feedbackSummary}</p>
+          ) : (
+            <p className="text-gray-500 italic">No feedback summary available</p>
+          )}
+        </Card>
         
         <Tabs defaultValue="surveys" className="w-full">
           <TabsList>
