@@ -6,22 +6,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+// Retry configuration
+const MAX_RETRIES = 3;
+const INITIAL_BACKOFF = 1000; // 1 second
+
+async function callOpenAIWithRetry(message: string, retryCount = 0): Promise<Response> {
+  const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+  if (!openAIApiKey) {
+    throw new Error('OpenAI API key not found');
   }
 
   try {
-    const { message } = await req.json();
-    console.log('Received message:', message);
-
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not found');
-    }
-
-    console.log('Making request to OpenAI API...');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -51,14 +46,44 @@ Guidelines for responses:
       }),
     });
 
+    if (response.status === 429 && retryCount < MAX_RETRIES) {
+      const backoffTime = INITIAL_BACKOFF * Math.pow(2, retryCount);
+      console.log(`Rate limited. Retrying in ${backoffTime}ms... (Attempt ${retryCount + 1}/${MAX_RETRIES})`);
+      await new Promise(resolve => setTimeout(resolve, backoffTime));
+      return callOpenAIWithRetry(message, retryCount + 1);
+    }
+
     if (!response.ok) {
       const errorData = await response.text();
       console.error('OpenAI API error:', errorData);
+      
+      if (response.status === 429) {
+        throw new Error('We are experiencing high demand. Please try again in a few moments.');
+      }
+      
       throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
     }
 
+    return response;
+  } catch (error) {
+    console.error(`Attempt ${retryCount + 1} failed:`, error);
+    throw error;
+  }
+}
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  try {
+    const { message } = await req.json();
+    console.log('Received message:', message);
+
+    const response = await callOpenAIWithRetry(message);
     const data = await response.json();
-    console.log('OpenAI API response received');
+    console.log('OpenAI API response received successfully');
 
     return new Response(
       JSON.stringify({ response: data.choices[0].message.content }),
@@ -68,13 +93,14 @@ Guidelines for responses:
     );
   } catch (error) {
     console.error('Error in chat function:', error);
+    const errorMessage = error.message || 'There was an error processing your request';
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'There was an error processing your request',
+        error: errorMessage,
         details: error.toString()
       }),
       {
-        status: 500,
+        status: error.message.includes('high demand') ? 429 : 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
     );
