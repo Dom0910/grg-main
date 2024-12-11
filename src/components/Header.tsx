@@ -1,14 +1,30 @@
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, Shield } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../App";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { session } = useAuth();
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", session?.user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session?.user?.id)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!session?.user?.id,
+  });
 
   const handleLogout = async () => {
     try {
@@ -37,6 +53,15 @@ const Header = () => {
           <a href="#pricing" className="text-neutral-400 hover:text-white transition-colors">
             Pricing
           </a>
+          {profile?.is_admin && (
+            <button 
+              onClick={() => navigate("/admin")}
+              className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
+            >
+              <Shield size={16} />
+              Admin
+            </button>
+          )}
           {session ? (
             <button 
               onClick={handleLogout}
@@ -75,6 +100,15 @@ const Header = () => {
             <a href="#pricing" className="text-neutral-400 hover:text-white transition-colors">
               Pricing
             </a>
+            {profile?.is_admin && (
+              <button 
+                onClick={() => navigate("/admin")}
+                className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
+              >
+                <Shield size={16} />
+                Admin
+              </button>
+            )}
             {session ? (
               <button 
                 onClick={handleLogout}
