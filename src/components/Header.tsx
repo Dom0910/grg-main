@@ -40,18 +40,15 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-900/90 backdrop-blur-lg border-b border-neutral-800">
       <nav className="container-padding mx-auto flex h-16 items-center justify-between">
         <a href="/" className="text-xl font-semibold text-white">
-          Monet
+          GuestReview Genius
         </a>
         
         <div className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-neutral-400 hover:text-white transition-colors">
-            Features
+            How it works
           </a>
           <a href="#testimonials" className="text-neutral-400 hover:text-white transition-colors">
             Testimonials
-          </a>
-          <a href="#pricing" className="text-neutral-400 hover:text-white transition-colors">
-            Pricing
           </a>
           {profile?.is_admin && (
             <button 
@@ -92,13 +89,10 @@ const Header = () => {
         <div className="md:hidden absolute top-16 left-0 right-0 bg-neutral-900/90 backdrop-blur-lg border-b border-neutral-800">
           <div className="container-padding py-4 flex flex-col gap-4">
             <a href="#features" className="text-neutral-400 hover:text-white transition-colors">
-              Features
+              How it works
             </a>
             <a href="#testimonials" className="text-neutral-400 hover:text-white transition-colors">
               Testimonials
-            </a>
-            <a href="#pricing" className="text-neutral-400 hover:text-white transition-colors">
-              Pricing
             </a>
             {profile?.is_admin && (
               <button 
