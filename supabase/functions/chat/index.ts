@@ -1,28 +1,39 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { Configuration, OpenAIApi } from 'https://esm.sh/openai@3.1.0'
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+};
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { message } = await req.json()
+    const { message } = await req.json();
+    console.log('Received message:', message);
 
-    // Initialize OpenAI client
-    const configuration = new Configuration({
-      apiKey: Deno.env.get('OPENAI_API_KEY'),
-    })
-    const openai = new OpenAIApi(configuration)
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key not found');
+    }
 
-    // System prompt for GuestReview Genius
-    const systemPrompt = `You are GuestReview Genius, an AI assistant specialized in helping Airbnb hosts craft professional and effective responses to guest reviews. Your goal is to help hosts maintain high ratings and build trust with potential guests.
+    console.log('Making request to OpenAI API...');
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are GuestReview Genius, an AI assistant specialized in helping Airbnb hosts craft professional and effective responses to guest reviews. Your goal is to help hosts maintain high ratings and build trust with potential guests.
 
 Guidelines for responses:
 1. Always maintain a professional and courteous tone
@@ -32,34 +43,40 @@ Guidelines for responses:
 5. Keep responses concise but thorough
 6. Focus on solutions and improvements
 7. End with a positive note that encourages future bookings`
+          },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    });
 
-    // Generate response using OpenAI
-    const completion = await openai.createChatCompletion({
-      model: "gpt-4o",  // Updated to use the recommended model
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: message }
-      ],
-      temperature: 0.7,
-      max_tokens: 500,
-    })
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+    }
 
-    const response = completion.data.choices[0].message?.content || "I apologize, but I couldn't generate a response. Please try again."
+    const data = await response.json();
+    console.log('OpenAI API response received');
 
     return new Response(
-      JSON.stringify({ response }),
+      JSON.stringify({ response: data.choices[0].message.content }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
-    )
+    );
   } catch (error) {
-    console.error(error)
+    console.error('Error in chat function:', error);
     return new Response(
-      JSON.stringify({ error: 'There was an error processing your request' }),
+      JSON.stringify({ 
+        error: error.message || 'There was an error processing your request',
+        details: error.toString()
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
-    )
+    );
   }
-})
+});
