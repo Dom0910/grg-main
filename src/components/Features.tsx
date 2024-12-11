@@ -1,48 +1,45 @@
-import { Check, CreditCard, BarChart, Globe, Clock } from "lucide-react";
+import { MessageSquare, Clock, ThumbsUp } from "lucide-react";
 
-const features = [
+const caseStudies = [
   {
-    title: "Simple Checkout",
-    description: "Streamlined checkout process optimized for conversion and user experience.",
-    icon: CreditCard,
-  },
-  {
-    title: "Recurring Billing",
-    description: "Automated billing system for subscriptions and recurring payments.",
+    title: "64% of Consumers Say Responsiveness Matters More Than a Perfect Rating",
+    description: "Be the responsive host guests prefer. GuestReview Genius makes it effortless to reply promptly and professionally to every review.",
     icon: Clock,
   },
   {
-    title: "Global Payments",
-    description: "Accept payments from customers anywhere in the world.",
-    icon: Globe,
+    title: "71% of Consumers Change Their Minds After Reading a Good Response to a Negative Review",
+    description: "Rebuild trust effortlessly. GuestReview Genius crafts thoughtful, professional responses that turn critics into loyal customers.",
+    icon: MessageSquare,
   },
   {
-    title: "Detailed Analytics",
-    description: "Get insights into your business with comprehensive reporting.",
-    icon: BarChart,
+    title: "33% of Unhappy Customers Upgrade or Take Down Their Negative Reviews After a Personalized Response Within a Day",
+    description: "One-third of unhappy guests are ready to forgive—you just need the right words, fast. GuestReview Genius delivers them for you.",
+    icon: ThumbsUp,
   },
 ];
 
 const Features = () => {
   return (
-    <section id="features" className="py-16 container-padding">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-          Everything You Need to Run & Grow Your Business
+    <section id="features" className="py-24 container-padding bg-neutral-50">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          A better way to Protect your Airbnb's reputation
         </h2>
-        <p className="text-neutral-600 text-center mb-12 max-w-2xl mx-auto">
-          All the tools and features you need to accept payments, manage subscriptions, and scale your business globally.
-        </p>
-        <div className="grid md:grid-cols-2 gap-8">
-          {features.map((feature, index) => (
-            <div key={index} className="glass-card p-8 rounded-xl">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-accent/10 p-3 rounded-lg">
-                  <feature.icon className="w-6 h-6 text-accent" />
-                </div>
-                <h3 className="font-semibold text-xl">{feature.title}</h3>
+        <div className="grid md:grid-cols-3 gap-8">
+          {caseStudies.map((study, index) => (
+            <div 
+              key={index} 
+              className="glass-card p-8 rounded-xl flex flex-col items-start hover:scale-[1.02] transition-transform duration-300"
+            >
+              <div className="bg-accent/10 p-3 rounded-lg mb-6">
+                <study.icon className="w-6 h-6 text-accent" />
               </div>
-              <p className="text-neutral-600">{feature.description}</p>
+              <h3 className="font-semibold text-xl mb-4 text-left">
+                {study.title}
+              </h3>
+              <p className="text-neutral-600 text-left">
+                {study.description}
+              </p>
             </div>
           ))}
         </div>
