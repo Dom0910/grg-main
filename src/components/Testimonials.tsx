@@ -1,48 +1,102 @@
-const testimonials = [
-  {
-    quote: "Switching to this platform has transformed how we handle payments. The simplicity is unmatched.",
-    author: "Sarah Chen",
-    role: "CEO at TechFlow",
-    avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop",
-  },
-  {
-    quote: "The recurring billing feature alone has saved us countless hours of manual work each month.",
-    author: "Mark Thompson",
-    role: "Founder of DataSync",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
-  },
-  {
-    quote: "Their global payment solutions helped us expand into new markets seamlessly.",
-    author: "Elena Rodriguez",
-    role: "COO at GlobalTech",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
-  },
-];
+import { ArrowRight, ClipboardCheck, Brain, CheckCircle2 } from "lucide-react";
 
-const Testimonials = () => {
+const HowItWorks = () => {
+  const steps = [
+    {
+      number: "1",
+      title: "Share 3 Things",
+      icon: ClipboardCheck,
+      content: (
+        <div className="space-y-2">
+          <p className="font-medium">1. Guest's First Name – To personalize the response.</p>
+          <p className="font-medium">2. The Review – Copy it from the Airbnb app.</p>
+          <p className="font-medium">3. Additional Context – Share details about your interaction with the guest.</p>
+        </div>
+      ),
+    },
+    {
+      number: "2",
+      title: "AI Analysis",
+      icon: Brain,
+      content: (
+        <div className="space-y-2">
+          <p className="mb-4">Our AI evaluates the situation and offers guidance on how hosts can use Airbnb's rules to their advantage. It cross references all of Airbnb's policies, including:</p>
+          <ul className="space-y-1">
+            <li className="flex items-center gap-2">
+              <ArrowRight className="w-4 h-4 text-accent" />
+              <span>Review Policy</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <ArrowRight className="w-4 h-4 text-accent" />
+              <span>Content Policy</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <ArrowRight className="w-4 h-4 text-accent" />
+              <span>Community Standards</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <ArrowRight className="w-4 h-4 text-accent" />
+              <span>Terms of Service</span>
+            </li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      number: "3",
+      title: "Get Results & Action Plan",
+      icon: CheckCircle2,
+      content: (
+        <div className="space-y-4">
+          <div>
+            <p className="font-medium mb-2">If policies are violated:</p>
+            <p>You'll receive a clear action plan to get the review removed, plus a script for talking to Airbnb Support.</p>
+          </div>
+          <div>
+            <p className="font-medium mb-2">If no violations:</p>
+            <p>Get a draft of a calm, professional response that:</p>
+            <ul className="space-y-1 mt-2">
+              <li className="flex items-center gap-2">
+                <ArrowRight className="w-4 h-4 text-accent" />
+                <span>Acknowledges the feedback.</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <ArrowRight className="w-4 h-4 text-accent" />
+                <span>Reassures future guests.</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <ArrowRight className="w-4 h-4 text-accent" />
+                <span>Reinforces your commitment to quality.</span>
+              </li>
+            </ul>
+            <p className="mt-4">This will turn your response into an opportunity to show future guests that you value feedback and are committed to delivering an exceptional experience.</p>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <section id="testimonials" className="py-16 container-padding bg-neutral-100">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-          See What Our Customers Are Saying
+    <section className="py-16 container-padding bg-neutral-100">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          How It Works
         </h2>
-        <p className="text-neutral-600 text-center mb-12 max-w-2xl mx-auto">
-          Join thousands of businesses that trust us with their payments.
-        </p>
         <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="glass-card p-6 rounded-xl">
-              <p className="text-neutral-600 mb-6">{testimonial.quote}</p>
-              <div className="flex items-center gap-3">
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.author}
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="font-semibold">{testimonial.author}</p>
-                  <p className="text-sm text-neutral-500">{testimonial.role}</p>
-                </div>
+          {steps.map((step, index) => (
+            <div 
+              key={index}
+              className="glass-card p-8 rounded-xl flex flex-col items-start hover:scale-[1.02] transition-transform duration-300"
+            >
+              <div className="bg-accent/10 p-3 rounded-lg mb-6">
+                <step.icon className="w-6 h-6 text-accent" />
+              </div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl font-bold text-accent">Step {step.number}:</span>
+                <h3 className="text-xl font-semibold">{step.title}</h3>
+              </div>
+              <div className="text-neutral-600 text-left">
+                {step.content}
               </div>
             </div>
           ))}
@@ -52,4 +106,4 @@ const Testimonials = () => {
   );
 };
 
-export default Testimonials;
+export default HowItWorks;
