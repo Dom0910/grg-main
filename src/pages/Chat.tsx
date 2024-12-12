@@ -56,7 +56,12 @@ const Chat = () => {
         <div className="space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-primary mb-4">AI Review Assistant</h1>
-            <p className="text-secondary text-lg">Paste your guest review below and I'll help you craft the perfect response.</p>
+            <p className="text-secondary text-lg mb-2">Share 3 things:</p>
+            <div className="text-secondary text-lg space-y-1">
+              <p>1. Guest's First Name – To personalize the response.</p>
+              <p>2. The Review – Copy it from the Airbnb app.</p>
+              <p>3. Additional Context – Share details about your interactions with the guest. Be detailed!</p>
+            </div>
           </div>
 
           <div className="glass-card rounded-lg p-6 min-h-[500px] flex flex-col">
