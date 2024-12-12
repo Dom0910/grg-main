@@ -56,7 +56,7 @@ const Survey = () => {
         description: "Thank you for your feedback.",
       });
 
-      navigate("/");
+      navigate("/chat");
     } catch (error) {
       toast({
         variant: "destructive",
@@ -137,7 +137,12 @@ const Survey = () => {
               )}
             />
 
-            <Button type="submit" className="w-full">Try it now</Button>
+            <Button 
+              type="submit" 
+              className="w-full bg-[#9b87f5] hover:bg-[#9b87f5]/90"
+            >
+              Try it now
+            </Button>
           </form>
         </Form>
       </div>
