@@ -47,9 +47,6 @@ const Header = () => {
           <a href="#features" className="text-neutral-400 hover:text-white transition-colors">
             How it works
           </a>
-          <a href="#testimonials" className="text-neutral-400 hover:text-white transition-colors">
-            Testimonials
-          </a>
           {profile?.is_admin && (
             <button 
               onClick={() => navigate("/admin")}
@@ -90,9 +87,6 @@ const Header = () => {
           <div className="container-padding py-4 flex flex-col gap-4">
             <a href="#features" className="text-neutral-400 hover:text-white transition-colors">
               How it works
-            </a>
-            <a href="#testimonials" className="text-neutral-400 hover:text-white transition-colors">
-              Testimonials
             </a>
             {profile?.is_admin && (
               <button 
