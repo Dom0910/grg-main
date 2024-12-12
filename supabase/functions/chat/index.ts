@@ -101,7 +101,7 @@ async function callOpenAIWithRetry(message: string, systemPrompt: string, retryC
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
@@ -137,6 +137,7 @@ async function callOpenAIWithRetry(message: string, systemPrompt: string, retryC
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
