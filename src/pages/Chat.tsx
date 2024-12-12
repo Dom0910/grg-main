@@ -52,11 +52,11 @@ const Chat = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Header />
-      <main className="container max-w-4xl mx-auto px-4 py-8">
+      <main className="container max-w-4xl mx-auto px-4 py-8 mt-16">
         <div className="space-y-8">
-          <div>
-            <h1 className="text-4xl font-bold text-primary mb-4">Chat with GuestReview Genius</h1>
-            <p className="text-secondary">Get help crafting the perfect responses to your Airbnb guest reviews.</p>
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-primary mb-4">AI Review Assistant</h1>
+            <p className="text-secondary text-lg">Paste your guest review below and I'll help you craft the perfect response.</p>
           </div>
 
           <div className="glass-card rounded-lg p-6 min-h-[500px] flex flex-col">
