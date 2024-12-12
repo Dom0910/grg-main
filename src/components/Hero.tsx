@@ -7,13 +7,13 @@ const Hero = () => {
   return (
     <section className="pt-32 pb-16 container-padding bg-primary text-white">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance leading-tight flex flex-col gap-4">
-          <span>Protect your Airbnb reputation</span>
-          <span>Craft Perfect Replies</span>
-          <span>Remove negative reviews</span>
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          Effortless Airbnb Reputation Management
         </h1>
         <p className="text-lg md:text-xl text-neutral-300 mb-8 max-w-2xl mx-auto">
-          Negative reviews hurt. Our AI helps. Join the beta test for free.
+          Stop stressing over unfair reviews. Our AI flags them instantly, disputes them with expert-crafted appeals, and creates personalized responses—so you can focus on hosting.
+          <br /><br />
+          Try the beta free today and lock in exclusive early adopter discounts - limited spots available!
         </p>
         <div className="flex justify-center">
           <button 
