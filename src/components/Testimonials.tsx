@@ -69,7 +69,6 @@ const HowItWorks = () => {
                 <span>Reinforces your commitment to quality.</span>
               </li>
             </ul>
-            <p className="mt-4">This will turn your response into an opportunity to show future guests that you value feedback and are committed to delivering an exceptional experience.</p>
           </div>
         </div>
       ),
@@ -77,7 +76,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-16 container-padding bg-neutral-100">
+    <section id="how-it-works" className="py-16 container-padding bg-neutral-100">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
           How It Works

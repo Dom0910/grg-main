@@ -44,7 +44,7 @@ const Header = () => {
         </a>
         
         <div className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-neutral-400 hover:text-white transition-colors">
+          <a href="#how-it-works" className="text-neutral-400 hover:text-white transition-colors">
             How it works
           </a>
           {profile?.is_admin && (
@@ -85,7 +85,7 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 right-0 bg-neutral-900/90 backdrop-blur-lg border-b border-neutral-800">
           <div className="container-padding py-4 flex flex-col gap-4">
-            <a href="#features" className="text-neutral-400 hover:text-white transition-colors">
+            <a href="#how-it-works" className="text-neutral-400 hover:text-white transition-colors">
               How it works
             </a>
             {profile?.is_admin && (
