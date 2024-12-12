@@ -74,21 +74,13 @@ const App = () => {
             <Routes>
               <Route path="/auth" element={<Auth />} />
               <Route path="/survey" element={<Survey />} />
-              <Route path="/chat" element={
-                <ProtectedRoute>
-                  <Chat />
-                </ProtectedRoute>
-              } />
+              <Route path="/chat" element={<Chat />} />
               <Route path="/admin" element={
                 <ProtectedRoute>
                   <Admin />
                 </ProtectedRoute>
               } />
-              <Route path="/" element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              } />
+              <Route path="/" element={<Index />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
