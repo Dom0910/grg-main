@@ -24,7 +24,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: "#9b87f5",
+        primary: "#141413",
         secondary: "#828179",
         accent: "#8989DE",
         neutral: {
