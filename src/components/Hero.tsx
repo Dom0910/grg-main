@@ -27,34 +27,34 @@ const Hero = () => {
       </div>
       <div className="mt-16 grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
         {/* Quick Response Card */}
-        <div className="bg-neutral-800/50 backdrop-blur rounded-xl p-6 flex flex-col items-center text-center animate-float">
+        <div className="bg-white text-neutral-900 backdrop-blur rounded-xl p-6 flex flex-col items-center text-center animate-float">
           <div className="h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
             <MessageSquareText className="w-8 h-8 text-accent" />
           </div>
           <h3 className="text-xl font-semibold mb-3">Review Replies Done in Seconds</h3>
-          <p className="text-neutral-300">
+          <p className="text-neutral-600">
             Effortlessly respond to your Airbnb reviews with personalized, professional responses in under 10 seconds. Save hours every month while maintaining a stellar online reputation with just one click.
           </p>
         </div>
 
         {/* Negative Review Card */}
-        <div className="bg-neutral-800/50 backdrop-blur rounded-xl p-6 flex flex-col items-center text-center animate-float [animation-delay:200ms]">
+        <div className="bg-white text-neutral-900 backdrop-blur rounded-xl p-6 flex flex-col items-center text-center animate-float [animation-delay:200ms]">
           <div className="h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
             <Shield className="w-8 h-8 text-accent" />
           </div>
           <h3 className="text-xl font-semibold mb-3">The Negative Review Eraser</h3>
-          <p className="text-neutral-300">
+          <p className="text-neutral-600">
             We'll tell you if you can get a negative or unfair review removed. Then, we'll give you a word-for-word script to handle Airbnb support like a pro. No guesswork. No stress.
           </p>
         </div>
 
         {/* Superhost Card */}
-        <div className="bg-neutral-800/50 backdrop-blur rounded-xl p-6 flex flex-col items-center text-center animate-float [animation-delay:400ms]">
+        <div className="bg-white text-neutral-900 backdrop-blur rounded-xl p-6 flex flex-col items-center text-center animate-float [animation-delay:400ms]">
           <div className="h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
             <Award className="w-8 h-8 text-accent" />
           </div>
           <h3 className="text-xl font-semibold mb-3">Superhost Status Accelerator</h3>
-          <p className="text-neutral-300">
+          <p className="text-neutral-600">
             To be a Superhost, you need a high rating. The requirement is simple: 4.8 stars. But getting there? That's where we come in.
           </p>
         </div>
