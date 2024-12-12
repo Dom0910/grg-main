@@ -99,12 +99,12 @@ const Chat = () => {
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="w-full bg-[#1A1F2C] text-white relative
+                className="w-full bg-[#1A1F2C] text-white relative overflow-hidden
                          before:absolute before:inset-0 before:p-[2px] 
                          before:bg-gradient-to-r before:from-[#9b87f5] before:to-[#1EAEDB]
                          before:rounded-md before:-z-10 before:content-['']
                          hover:before:opacity-80 transition-all duration-300
-                         rounded-md"
+                         rounded-md shadow-lg"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
