@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/App";
+import Header from "@/components/Header";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -78,6 +79,7 @@ const Survey = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="container max-w-2xl mx-auto py-16 px-4">
         <h1 className="text-4xl font-bold mb-8 text-center">Quick Survey</h1>
         <Form {...form}>
