@@ -41,13 +41,22 @@ const Survey = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { error } = await supabase.from("survey_responses").insert({
-        user_id: session?.user.id,
+      // Create the base survey response object
+      const surveyData = {
         email: values.email,
         name: values.name,
         property_count: values.propertyCount,
         pain_point: values.painPoint,
-      });
+      };
+
+      // If user is authenticated, add their user_id
+      if (session?.user?.id) {
+        Object.assign(surveyData, { user_id: session.user.id });
+      }
+
+      const { error } = await supabase
+        .from("survey_responses")
+        .insert(surveyData);
 
       if (error) throw error;
 
@@ -58,6 +67,7 @@ const Survey = () => {
 
       navigate("/chat");
     } catch (error) {
+      console.error('Survey submission error:', error);
       toast({
         variant: "destructive",
         title: "Error submitting survey",
